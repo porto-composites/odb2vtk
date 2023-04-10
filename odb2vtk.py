@@ -126,20 +126,36 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 			#match nodes' label and its order in sequence (for empty nodes in tetra mesh)
 			MLN = node[n_nodes-1].label
 			TOTAL=[]
+			node_id_label = []
+			id_n = 0
+			
+			def sort_label(x):
+				return x[1]
+
 			#read node in sequence, and get the largest label of node(non-empty) 
 			#MLN is the max label of nodeset
 			for i in node:
 				TOTAL.append(i.label)
 				if(i.label > MLN):
 					MLN = i.label
+				id_label = []
+				id_label.append(id_n)
+				id_label.append(i.label)
+				node_id_label.append(id_label)
+				id_n += 1
+			node_id_label.sort(key=sort_label)
 			#match (the key)
 			L=[]
 			n = 0
 			for i in range(MLN): 
 				L.append(0)
-			for i in TOTAL:
-				L[i-1] = n
+			
+			stg_n = []
+			for i in node_id_label:
+				label = i[1]
+				L[label-1] = i[0]
 				n += 1
+				stg_n.append(i[0])
 
 			
 			#frame cycle
@@ -313,7 +329,6 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					#store the reorganized node for element
 					stg_e = []
 					#store the reorganized node for node
-					stg_n = []
 					for i in range(MLN):
 						stg_p.append(-1)
 					nodecount = 0
@@ -332,15 +347,15 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 						lnods_el = []
 						for j in range(mesh_conner):
 							k = element[i].connectivity[j] - 1
-							if(stg_p[k] < 0): 
-								stg_p[k] = nodecount
-								stg_n.append(L[k]) 
-								stg_e.append(nodecount)
-								lnods_el.append(nodecount)
-								nodecount += 1
-							else:
-								lnods_el.append(stg_p[k])
-								stg_e.append(stg_p[k])
+							lnods_el.append(L[k])
+							
+							# if(stg_p[k] < 0): 
+							# 	stg_p[k] = nodecount
+							# 	stg_e.append(nodecount)
+							# 	nodecount += 1
+							# else:
+							# 	lnods_el.append(stg_p[k])
+							# 	stg_e.append(stg_p[k])
 						lnods.append(lnods_el)
 
 					#compute point quantity
