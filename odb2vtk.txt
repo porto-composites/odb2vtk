@@ -1,12 +1,12 @@
 ----------input and output path----------
-odb_path = 'C:\Temp'
-odb_name = 'CP10_L6_DP1'
-vtk_path = 'C:\Temp\CP10_L6_DP1'
+odb_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Longitudinal_Traction\NLGEOM_YES'
+odb_name = 'Test-RVE-Longitudinal-Traction'
+vtk_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Longitudinal_Traction\NLGEOM_YES'
 --------------type of mesh--------------
 mesh_type = '12'
 -------------number of piece-------------
-piecenum = '2'
+piecenum = '1'
 ----setting frame, step and instance----
-frame = '1-20'
+frame = '0-1'
 step = '0'
-instance = '0'
+instance = '13'

@@ -45,6 +45,9 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 	if (mesh_type == 10):
 		mesh_conner = 4
 		mesh_name = "Tetra"
+	if (mesh_type == 13):
+		mesh_conner = 6
+		mesh_name = "Wedge"
 	if (mesh_conner == 0):
 		print "Mesh type error or unidentified"
 		os._exit(0)
@@ -183,22 +186,22 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					L0[i-1][0] = valueX.data[0]
 					L0[i-1][1] = valueX.data[1]
 					L0[i-1][2] = valueX.data[2]
-				#Access Spatial acceleration
-				acceleration = N_Frame.fieldOutputs['A']
-				fieldValues = acceleration.values
-				for valueX in fieldValues :
-					i = valueX.nodeLabel
-					L0[i-1][3] = valueX.data[0]
-					L0[i-1][4] = valueX.data[1]
-					L0[i-1][5] = valueX.data[2]
-				#Access Spatial velocity
-				velocity = N_Frame.fieldOutputs['V']
-				fieldValues = velocity.values
-				for valueX in fieldValues :
-					i = valueX.nodeLabel
-					L0[i-1][6] = valueX.data[0]
-					L0[i-1][7] = valueX.data[1]
-					L0[i-1][8] = valueX.data[2]
+				# #Access Spatial acceleration
+				# acceleration = N_Frame.fieldOutputs['A']
+				# fieldValues = acceleration.values
+				# for valueX in fieldValues :
+				# 	i = valueX.nodeLabel
+				# 	L0[i-1][3] = valueX.data[0]
+				# 	L0[i-1][4] = valueX.data[1]
+				# 	L0[i-1][5] = valueX.data[2]
+				# #Access Spatial velocity
+				# velocity = N_Frame.fieldOutputs['V']
+				# fieldValues = velocity.values
+				# for valueX in fieldValues :
+				# 	i = valueX.nodeLabel
+				# 	L0[i-1][6] = valueX.data[0]
+				# 	L0[i-1][7] = valueX.data[1]
+				# 	L0[i-1][8] = valueX.data[2]
 				#Access Reaction force
 				Reaction_force = N_Frame.fieldOutputs['RF']
 				fieldValues = Reaction_force.values	
@@ -248,33 +251,52 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					L2[valueX.nodeLabel-1][7] += valueX.maxPrincipal
 					L2[valueX.nodeLabel-1][8] += valueX.minPrincipal
 				print "Time elapsed: ", time() - time1, "s"
-				print "Reading Plastic strain ......"
-				time1 = time()
-				#Plastic strain components
-				Plastic_strain = N_Frame.fieldOutputs['PE']
-				node_Plastic_strain = Plastic_strain.getSubset(position=ELEMENT_NODAL)
-				fieldValues = node_Plastic_strain.values	
-				for valueX in fieldValues :
-					L3[valueX.nodeLabel-1][0] += 1
-					L3[valueX.nodeLabel-1][1] += valueX.data[0]
-					L3[valueX.nodeLabel-1][2] += valueX.data[1]
-					L3[valueX.nodeLabel-1][3] += valueX.data[2]
-					L3[valueX.nodeLabel-1][4] += valueX.data[3]
-					L3[valueX.nodeLabel-1][5] += valueX.data[4]
-					L3[valueX.nodeLabel-1][6] += valueX.data[5]
-					L3[valueX.nodeLabel-1][7] += valueX.maxPrincipal
-					L3[valueX.nodeLabel-1][8] += valueX.minPrincipal
-				print "Time elapsed: ", time() - time1, "s"
-				print "Reading Equivalent plastic strain ......"
-				time1 = time()
-				#Equivalent plastic strain
-				Equivalent_plastic_strain = N_Frame.fieldOutputs['PEEQ']
-				node_Equivalent_plastic_strain = Equivalent_plastic_strain.getSubset(position=ELEMENT_NODAL)
-				fieldValues = node_Equivalent_plastic_strain.values
-				for valueX in fieldValues :
-					L4[valueX.nodeLabel-1][0] += 1
-					L4[valueX.nodeLabel-1][1] += valueX.data
-				print "Time elapsed: ", time() - time1, "s"	
+				# print "Reading Plastic strain ......"
+				# time1 = time()
+				# #Plastic strain components
+				# Plastic_strain = N_Frame.fieldOutputs['PE']
+				# node_Plastic_strain = Plastic_strain.getSubset(position=ELEMENT_NODAL)
+				# fieldValues = node_Plastic_strain.values	
+				# for valueX in fieldValues :
+				# 	L3[valueX.nodeLabel-1][0] += 1
+				# 	L3[valueX.nodeLabel-1][1] += valueX.data[0]
+				# 	L3[valueX.nodeLabel-1][2] += valueX.data[1]
+				# 	L3[valueX.nodeLabel-1][3] += valueX.data[2]
+				# 	L3[valueX.nodeLabel-1][4] += valueX.data[3]
+				# 	L3[valueX.nodeLabel-1][5] += valueX.data[4]
+				# 	L3[valueX.nodeLabel-1][6] += valueX.data[5]
+				# 	L3[valueX.nodeLabel-1][7] += valueX.maxPrincipal
+				# 	L3[valueX.nodeLabel-1][8] += valueX.minPrincipal
+				# print "Time elapsed: ", time() - time1, "s"
+				# print "Reading Equivalent plastic strain ......"
+				# time1 = time()
+				# #Equivalent plastic strain
+				# Equivalent_plastic_strain = N_Frame.fieldOutputs['SDV10']
+				# node_Equivalent_plastic_strain = Equivalent_plastic_strain.getSubset(position=ELEMENT_NODAL)
+				# fieldValues = node_Equivalent_plastic_strain.values
+				# for valueX in fieldValues :
+				# 	L4[valueX.nodeLabel-1][0] += 1
+				# 	L4[valueX.nodeLabel-1][1] += valueX.data
+				# print "Time elapsed: ", time() - time1, "s"
+
+				# # #Fibre direction vector
+				# Avec1 = N_Frame.fieldOutputs['SDV31'].getSubset(position=ELEMENT_NODAL)
+				# fieldValues = Avec1.values
+				# for valueX in fieldValues :
+				# 	i = valueX.nodeLabel
+				# 	L0[i-1][3] = valueX.data
+
+				# Avec2 = N_Frame.fieldOutputs['SDV32'].getSubset(position=ELEMENT_NODAL)
+				# fieldValues = Avec2.values
+				# for valueX in fieldValues :
+				# 	i = valueX.nodeLabel
+				# 	L0[i-1][4] = valueX.data
+
+				# Avec3 = N_Frame.fieldOutputs['SDV33'].getSubset(position=ELEMENT_NODAL)
+				# fieldValues = Avec3.values
+				# for valueX in fieldValues :
+				# 	i = valueX.nodeLabel
+				# 	L0[i-1][5] = valueX.data
 				
 				
 				'''============================================================'''
@@ -295,21 +317,32 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					for i in range(MLN):
 						stg_p.append(-1)
 					nodecount = 0
+					#
+					nnodel = []
+					lnods = []
 					#reorganize the node and element (reconstruct the mesh)
 					if(pn == piecenum-1):
 						M = range(pn*p_elements,n_elements)
 					else:
 						M = range(pn*p_elements,(pn+1)*p_elements)
 					for i in M:
+						mesh_conner = len(element[i].connectivity)
+						nnodel.append(mesh_conner)
+						#lnods.append(element[i].connectivity)
+						lnods_el = []
 						for j in range(mesh_conner):
 							k = element[i].connectivity[j] - 1
 							if(stg_p[k] < 0): 
 								stg_p[k] = nodecount
 								stg_n.append(L[k]) 
 								stg_e.append(nodecount)
+								lnods_el.append(nodecount)
 								nodecount += 1
 							else:
+								lnods_el.append(stg_p[k])
 								stg_e.append(stg_p[k])
+						lnods.append(lnods_el)
+
 					#compute point quantity
 					n_reop = len(stg_n)
 					reop_N = range(0,len(stg_n))
@@ -341,7 +374,7 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					for i in reop_N:
 						nt = stg_n[i]
 						k = node[stg_n[i]].label-1
-						X,Y,Z = node[nt].coordinates[0]+L0[k][0],node[nt].coordinates[1]+L0[k][1],node[nt].coordinates[2]+L0[k][2]
+						X,Y,Z = node[nt].coordinates[0],node[nt].coordinates[1],node[nt].coordinates[2]
 						outfile.write(' '+'%11.8e'%X+'  '+'%11.8e'%Y+'  '+'%11.8e'%Z+'\n')			
 					outfile.write('</DataArray>'+'\n')
 					outfile.write('</Points>'+'\n')
@@ -350,9 +383,9 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 
 					print "Writing Results data ......"
 					#<PointData> Write results data into vtk files
-					outfile.write("<"+"PointData"+" "+"Tensors="+'"'+"Stress_Components,Plastic_strain_components"+'"'\
-					+" "+"Vevtors="+'"'+"Spatial_displacement,Reaction_force"+'"'\
-					+" "+"Scalars="+'"'+"Equivalent_plastic_strain,Stress_Mises,Stress_Max_Principal,Stress_Mid_Principal,Stress_Min_Principal,Stress_Pressure,Stress_Tresca,Stress_Third_Invariant,Plastic_strain_Max_Principal,Plastic_strain_Min_Principal"+'"'+">"+'\n')
+					outfile.write("<"+"PointData"+" "+"Tensors="+'"'+"Stress_Components,Logarithmic_strain_components"+'"'\
+					+" "+"Vectors="+'"'+"Spatial_displacement,Reaction_force"+'"'\
+					+" "+"Scalars="+'"'+"Stress_Mises"+'"'+">"+'\n')
 					
 					#Stress components, <DataArray>
 					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Components"+'"'+" "+"NumberOfComponents="+'"'+"9"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
@@ -372,14 +405,14 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					outfile.write("</DataArray>"+'\n')
 					#</DataArray>
 					
-					#Plastic strain components, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_components"+'"'+" "+"NumberOfComponents="+'"'+"9"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						XX,XY,XZ,YX,YY,YZ,ZX,ZY,ZZ = L3[k][1]/L3[k][0],L3[k][4]/L3[k][0],L3[k][6]/L3[k][0],L3[k][4]/L3[k][0],L3[k][2]/L3[k][0],L3[k][5]/L3[k][0],L3[k][6]/L3[k][0],L3[k][5]/L3[k][0],L3[k][3]/L3[k][0]
-						outfile.write('%11.8e'%XX+' '+'%11.8e'%XY+' '+'%11.8e'%XZ+' '+'%11.8e'%YX+' '+'%11.8e'%YY+' '+'%11.8e'%YZ+' '+'%11.8e'%ZX+' '+'%11.8e'%ZY+' '+'%11.8e'%ZZ+'\n')
-					outfile.write("</DataArray>"+'\n')
-					#</DataArray>
+					# #Plastic strain components, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_components"+'"'+" "+"NumberOfComponents="+'"'+"9"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	XX,XY,XZ,YX,YY,YZ,ZX,ZY,ZZ = L3[k][1]/L3[k][0],L3[k][4]/L3[k][0],L3[k][6]/L3[k][0],L3[k][4]/L3[k][0],L3[k][2]/L3[k][0],L3[k][5]/L3[k][0],L3[k][6]/L3[k][0],L3[k][5]/L3[k][0],L3[k][3]/L3[k][0]
+					# 	outfile.write('%11.8e'%XX+' '+'%11.8e'%XY+' '+'%11.8e'%XZ+' '+'%11.8e'%YX+' '+'%11.8e'%YY+' '+'%11.8e'%YZ+' '+'%11.8e'%ZX+' '+'%11.8e'%ZY+' '+'%11.8e'%ZZ+'\n')
+					# outfile.write("</DataArray>"+'\n')
+					# #</DataArray>
 
 					#Spatial displacement, <DataArray>
 					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Spatial_displacement"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
@@ -390,23 +423,23 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					outfile.write("</DataArray>"+'\n')
 					#</DataArray>
 		
-					#Spatial acceleration, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Spatial_acceleration"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X,Y,Z = L0[k][3],L0[k][4],L0[k][5]
-						outfile.write('%11.8e'%X+' '+'%11.8e'%Y+' '+'%11.8e'%Z+'\n')
-					outfile.write("</DataArray>"+'\n')
-					#</DataArray>
+					# #Spatial acceleration, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Spatial_acceleration"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X,Y,Z = L0[k][3],L0[k][4],L0[k][5]
+					# 	outfile.write('%11.8e'%X+' '+'%11.8e'%Y+' '+'%11.8e'%Z+'\n')
+					# outfile.write("</DataArray>"+'\n')
+					# #</DataArray>
 
-					#Spatial velocity, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Spatial_velocity"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X,Y,Z = L0[k][6],L0[k][7],L0[k][8]
-						outfile.write('%11.8e'%X+' '+'%11.8e'%Y+' '+'%11.8e'%Z+'\n')
-					outfile.write("</DataArray>"+'\n')	
-					#</DataArray>
+					# #Spatial velocity, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Spatial_velocity"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X,Y,Z = L0[k][6],L0[k][7],L0[k][8]
+					# 	outfile.write('%11.8e'%X+' '+'%11.8e'%Y+' '+'%11.8e'%Z+'\n')
+					# outfile.write("</DataArray>"+'\n')	
+					# #</DataArray>
 		
 					#Reaction force
 					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Reaction_force"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
@@ -417,14 +450,14 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					outfile.write("</DataArray>"+'\n')	
 					#</DataArray>
 					
-					#Equivalent plastic strain, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Equivalent_plastic_strain"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L4[k][1]/L4[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')
-					#</DataArray>
+					# #Equivalent plastic strain, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Equivalent_plastic_strain"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L4[k][1]/L4[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')
+					# #</DataArray>
 
 					#Stress Mises, <DataArray>
 					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Mises"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
@@ -435,95 +468,104 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					outfile.write('</DataArray>'+'\n')
 					#</DataArray>
 
-					#Stress Max.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][8]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Max.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][8]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 		
-					#Stress Mid.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Mid_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][9]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Mid.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Mid_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][9]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 			
-					#Stress Min.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][10]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Min.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][10]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 			
-					#Stress Pressure, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Pressure"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][11]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Pressure, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Pressure"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][11]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 
-					#Stress Tresca, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Tresca"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][12]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Tresca, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Tresca"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][12]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 			
-					#Stress Third_Invariant, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Third_Invariant"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L1[k][13]/L1[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Stress Third_Invariant, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Stress_Third_Invariant"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L1[k][13]/L1[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 		
-					#Logarithmic_strain_Max_Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Logarithmic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L2[k][7]/L2[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Logarithmic_strain_Max_Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Logarithmic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L2[k][7]/L2[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 		
-					#Logarithmic strain Min.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Logarithmic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L2[k][8]/L2[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
+					# #Logarithmic strain Min.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Logarithmic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L2[k][8]/L2[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
 					#</DataArray>'''
 		
-					#Plastic strain Max.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L3[k][7]/L3[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Plastic strain Max.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L3[k][7]/L3[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 		
-					#Plastic strain Min.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L3[k][8]/L3[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Plastic strain Min.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L3[k][8]/L3[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
+
+					# #Fibre Direction, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Fibre Direction"+'"'+" "+"NumberOfComponents="+'"'+"3"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X,Y,Z = L0[k][3],L0[k][4],L0[k][5]
+					# 	outfile.write('%11.8e'%X+' '+'%11.8e'%Y+' '+'%11.8e'%Z+'\n')
+					# outfile.write("</DataArray>"+'\n')
+					# #</DataArray>
 					
 					outfile.write("</PointData>"+'\n')
 					#</PointData>
@@ -534,21 +576,38 @@ def ConvertOdb2Vtk(filename = 'C:\Temp\odb2vtk.txt'):  #Modify the default value
 					outfile.write('<Cells>'+'\n')
 					#Connectivity
 					outfile.write('<DataArray type="Int32" Name="connectivity" format="ascii">'+'\n')
-					if (mesh_type == 12):
-						for i in range(len(stg_e)/8):
-							outfile.write(str(stg_e[i*8])+' '+str(stg_e[i*8+1])+' '+str(stg_e[i*8+2])+' '+str(stg_e[i*8+3])+' '+str(stg_e[i*8+4])+' '+str(stg_e[i*8+5])+' '+str(stg_e[i*8+6])+' '+str(stg_e[i*8+7])+'\n')
-					if (mesh_type == 10):
-						for i in range(len(stg_e)/4):
-							outfile.write(str(stg_e[i*4])+' '+str(stg_e[i*4+1])+' '+str(stg_e[i*4+2])+' '+str(stg_e[i*4+3])+'\n')
+					for i in range(len(element)):
+						outstr = ''
+						for i in lnods[i]:
+							outstr = outstr + str(i) + ' '
+						outfile.write(outstr+'\n')
+					# if (mesh_type == 12):
+					# 	for i in range(len(stg_e)/8):
+					# 		outfile.write(str(stg_e[i*8])+' '+str(stg_e[i*8+1])+' '+str(stg_e[i*8+2])+' '+str(stg_e[i*8+3])+' '+str(stg_e[i*8+4])+' '+str(stg_e[i*8+5])+' '+str(stg_e[i*8+6])+' '+str(stg_e[i*8+7])+'\n')
+					# if (mesh_type == 10):
+					# 	for i in range(len(stg_e)/4):
+					# 		outfile.write(str(stg_e[i*4])+' '+str(stg_e[i*4+1])+' '+str(stg_e[i*4+2])+' '+str(stg_e[i*4+3])+'\n')
 					outfile.write('</DataArray>'+'\n')
 					#Offsets
 					outfile.write('<DataArray type="Int32" Name="offsets" format="ascii">'+'\n')
-					for i in range(len(stg_e)/mesh_conner):
-						outfile.write(str(i*mesh_conner+mesh_conner)+'\n')
+					offsets = 0
+					for i in range(len(element)):
+						offsets += nnodel[i]
+						outfile.write(str(offsets)+'\n')
 					outfile.write('</DataArray>'+'\n')
 					#Type
 					outfile.write('<DataArray type="UInt8" Name="types" format="ascii">'+'\n')
-					for i in range(len(stg_e)/mesh_conner):
+					for i in range(len(element)):
+						mesh_conner = nnodel[i]
+						if mesh_conner == 4:
+							mesh_type = 10
+						elif mesh_conner == 8:
+							mesh_type = 12
+						elif mesh_conner == 6:
+							mesh_type = 13
+						else:
+							print('Unexpected number of nodes in element')
+							os._exit(0)
 						outfile.write(str(mesh_type)+'\n')
 					outfile.write('</DataArray>'+'\n')
 					outfile.write('</Cells>'+'\n')
@@ -1098,23 +1157,23 @@ def ConvertOdb2VtkP(Odbpath = ' ',Odbname = ' ',vtkpath = ' ',MeshType = ' ',Pie
 					outfile.write('</DataArray>'+'\n')	
 					#</DataArray>'''
 		
-					#Plastic strain Max.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L3[k][7]/L3[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Plastic strain Max.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Max_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L3[k][7]/L3[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 		
-					#Plastic strain Min.Principal, <DataArray>
-					outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
-					for i in reop_N:
-						k = node[stg_n[i]].label-1
-						X = L3[k][8]/L3[k][0]
-						outfile.write('%11.8e'%X+'\n')
-					outfile.write('</DataArray>'+'\n')	
-					#</DataArray>
+					# #Plastic strain Min.Principal, <DataArray>
+					# outfile.write("<"+"DataArray"+" "+"type="+'"'+"Float32"+'"'+" "+"Name="+'"'+"Plastic_strain_Min_Principal"+'"'+" "+"format="+'"'+"ascii"+'"'+">"+'\n')
+					# for i in reop_N:
+					# 	k = node[stg_n[i]].label-1
+					# 	X = L3[k][8]/L3[k][0]
+					# 	outfile.write('%11.8e'%X+'\n')
+					# outfile.write('</DataArray>'+'\n')	
+					# #</DataArray>
 					
 					outfile.write("</PointData>"+'\n')
 					#</PointData>
