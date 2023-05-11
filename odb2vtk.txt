@@ -1,7 +1,7 @@
 ----------input and output path----------
-odb_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Longitudinal_Traction\NLGEOM_YES'
-odb_name = 'Test-RVE-Longitudinal-Traction'
-vtk_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Longitudinal_Traction\NLGEOM_YES'
+odb_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Generic_PBC_Long_Tension\NLGEOM_YES'
+odb_name = 'Test-RVE-Generic_PBC'
+vtk_path = 'E:\Simulations\DIDEAROT\Micro_RVE_Elastic_Compare_BSC\Generic_PBC_Long_Tension\NLGEOM_YES'
 --------------type of mesh--------------
 mesh_type = '12'
 -------------number of piece-------------
